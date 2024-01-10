@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.a59ced60.css",
+    "main.js": "/static/js/main.cf166e2b.js",
+    "static/media/rani.jpg": "/static/media/rani.4d1d98323e8fde7d3662.jpg",
+    "static/media/worod.jpg": "/static/media/worod.d12c62086565c3f6e1d0.jpg",
+    "static/media/icons8java.svg": "/static/media/icons8java.b0cafa0321e2dcbc1ce9cf6c44033685.svg",
+    "index.html": "/index.html",
+    "static/media/dashboard_icon.svg": "/static/media/dashboard_icon.bc800f3b9286b71005c3f026ebfaa958.svg",
+    "static/media/add_icon.svg": "/static/media/add_icon.376e9b6a44e5b3142f1239a3cc8504d0.svg",
+    "main.a59ced60.css.map": "/static/css/main.a59ced60.css.map",
+    "main.cf166e2b.js.map": "/static/js/main.cf166e2b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a59ced60.css",
+    "static/js/main.cf166e2b.js"
+  ]
+}

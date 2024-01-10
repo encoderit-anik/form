@@ -1,0 +1,5 @@
+.chat-container {
+    height: 300px; /* Adjust as needed */
+    overflow-y: auto;
+  }
+  
