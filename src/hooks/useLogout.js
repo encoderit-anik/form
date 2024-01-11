@@ -3,44 +3,43 @@ import { projectAuth, projectFirestore } from '../firebase/config'
 import { useAuthContext } from './useAuthContext'
 
 export const useLogout = () => {
-  const [isCancelled, setIsCancelled] = useState(false)
-  const [error, setError] = useState(null)
-  const [isPending, setIsPending] = useState(false)
-  const { dispatch,user } = useAuthContext()
-  
-  const logout = async () => {
-    setError(null)
-    setIsPending(true)
+	const [isCancelled, setIsCancelled] = useState(false)
+	const [error, setError] = useState(null)
+	const [isPending, setIsPending] = useState(false)
+	const { dispatch, user } = useAuthContext()
 
-    try {
-      // we must do that before we make the use log out from firebase to get the id
-      // update online status
-      const {uid} = user
-      await projectFirestore.collection('users').doc(uid).update({online:false})
+	const logout = async () => {
+		setError(null)
+		setIsPending(true)
 
-      // sign the user out
-      await projectAuth.signOut()
-      
-      // dispatch logout action
-      dispatch({ type: 'LOGOUT' })
+		try {
+			// we must do that before we make the use log out from firebase to get the id
+			// update online status
+			const { uid } = user
+			await projectFirestore.collection('users').doc(uid).update({ online: false })
 
-      // update state
-      if (!isCancelled) {
-        setIsPending(false)
-        setError(null)
-      } 
-    } 
-    catch(err) {
-      if (!isCancelled) {
-        setError(err.message)
-        setIsPending(false)
-      }
-    }
-  }
+			// sign the user out
+			await projectAuth.signOut()
 
-  useEffect(() => {
-    return () => setIsCancelled(true)
-  }, [])
+			// dispatch logout action
+			dispatch({ type: 'LOGOUT' })
 
-  return { logout, error, isPending }
+			// update state
+			if (!isCancelled) {
+				setIsPending(false)
+				setError(null)
+			}
+		} catch (err) {
+			if (!isCancelled) {
+				setError(err.message)
+				setIsPending(false)
+			}
+		}
+	}
+
+	useEffect(() => {
+		return () => setIsCancelled(true)
+	}, [])
+
+	return { logout, error, isPending }
 }
