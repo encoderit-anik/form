@@ -10,7 +10,6 @@ import chatIcon from '../assets/icons8-chat-30.png'
 import Avatar from './Avatar'
 export default function Sidebar() {
 	const { user } = useAuthContext()
-
 	return (
 		<div className="sidebar">
 			<div className="sidebar-content">

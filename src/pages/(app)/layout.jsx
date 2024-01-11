@@ -14,7 +14,7 @@ export const Component = () => {
 	return (
 		<>
 			<Sidebar />
-			<div className="container">
+			<div className="wrapper">
 				<Navbar />
 				<Outlet />
 			</div>

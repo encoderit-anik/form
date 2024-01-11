@@ -9,7 +9,7 @@ export const Component = () => {
 	if (user) return <Navigate replace to="/" />
 
 	return (
-		<div className="container">
+		<div className="wrapper">
 			<Navbar />
 			<Outlet />
 		</div>

@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom'
 import { AuthContextProvider } from './context/AuthContext'
 
 import './index.css'
+import './tailwind.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
