@@ -1,0 +1,17 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"cSpell.words": [
+		"appspot",
+		"changeemail",
+		"changename",
+		"changepassword",
+		"changephoto",
+		"contactus",
+		"firebaseapp",
+		"firestore",
+		"fontawesome",
+		"fortawesome",
+		"Signup"
+	]
+}
