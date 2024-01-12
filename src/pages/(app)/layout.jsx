@@ -6,9 +6,7 @@ import Sidebar from '@/components/Sidebar'
 import OnlineUsers from '@/components/OnlineUsers'
 
 export const Component = () => {
-	const { user, authIsReady } = useAuthContext()
-
-	if (!authIsReady) return null
+	const { user } = useAuthContext()
 	if (!user) return <Navigate replace to="/login" />
 
 	return (

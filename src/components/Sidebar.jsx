@@ -26,7 +26,7 @@ export default function Sidebar() {
 							</NavLink>
 						</li>
 						<li>
-							<NavLink exact to="/">
+							<NavLink to="/">
 								<img src={DashboardIcon} alt="dashboard icon" />
 								<span>Form</span>
 							</NavLink>

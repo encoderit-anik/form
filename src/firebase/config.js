@@ -2,6 +2,7 @@ import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore'
 import 'firebase/compat/auth'
 import 'firebase/compat/storage'
+
 const firebaseConfig = {
 	apiKey: 'AIzaSyBlt0oktv1IBIQKTkXH1ea6Pe0SPuz9mE0',
 	authDomain: 'java-form-1af03.firebaseapp.com',
@@ -22,4 +23,7 @@ const projectStorage = firebase.storage()
 // timestamp
 const timestamp = firebase.firestore.Timestamp
 
-export { projectFirestore, projectAuth, timestamp, projectStorage }
+const Auth = projectAuth
+const Users = projectFirestore.collection('users')
+
+export { projectFirestore, Users, Auth, projectAuth, timestamp, projectStorage }
