@@ -1,49 +1,16 @@
 import { clsx } from 'clsx'
-import { Users, projectFirestore } from '@/firebase/config'
-import { useCallback, useEffect, useState } from 'react'
+import { Users } from '@/firebase/config'
+import { useCallback, useState } from 'react'
+import { useCollection2 } from '@/hooks/useCollection2'
 
 import Avatar from '@/components/Avatar'
 import IconButton from '@/components/base/IconButton'
-
-const useCollection = (name) => {
-	const [data, setData] = useState([])
-	const toItem = useCallback((v) => {
-		return {
-			uid: v.id,
-			doc: v,
-			...v.data(),
-		}
-	}, [])
-	useEffect(() => {
-		projectFirestore
-			.collection(name)
-			.where('deletedAt', '==', null)
-			.get()
-			.then((res) => res.docs.map(toItem))
-			.then((res) => setData(res))
-		return projectFirestore
-			.collection(name)
-			.orderBy('updatedAt', 'desc')
-			.limit(1)
-			.onSnapshot((snapshot) => {
-				const newItem = toItem(snapshot.docs[0])
-				setData((data) => {
-					if (newItem.deletedAt) {
-						return data.filter((item) => {
-							return item.uid !== newItem.uid
-						})
-					}
-					return data.map((item) => {
-						return item.uid !== newItem.uid ? item : newItem
-					})
-				})
-			})
-	}, [])
-	return { data }
-}
+import Table from '@/components/base/Table'
 
 export const Component = () => {
-	const { data: users } = useCollection('users')
+	const { data: users } = useCollection2('users', {
+		where: ['deletedAt', '==', null],
+	})
 
 	const onDeleteUser = useCallback((v) => {
 		if (confirm(`Are you sure delete this user?`)) {
@@ -125,33 +92,7 @@ export const Component = () => {
 	return (
 		<div>
 			<h1 className="text-xl font-bold">Users</h1>
-			<div className="mt-8 bg-white border rounded-lg overflow-hidden shadow-lg">
-				<table className="w-full border-collapse text-left text-sm">
-					<thead>
-						<tr className="">
-							{headers.map((header, index) => (
-								<th
-									key={index}
-									className={clsx(header.thClass, 'p-4 font-medium uppercase')}
-								>
-									{header.label}
-								</th>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{users.map((user, index) => (
-							<tr key={index} className="border-t">
-								{headers.map((header, index) => (
-									<td key={index} className="p-4">
-										<div className={clsx(header.tdClass)}>{header.value?.(user)}</div>
-									</td>
-								))}
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
+			<Table headers={headers} items={users} />
 		</div>
 	)
 }

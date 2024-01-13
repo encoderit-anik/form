@@ -25,5 +25,6 @@ const timestamp = firebase.firestore.Timestamp
 
 const Auth = projectAuth
 const Users = projectFirestore.collection('users')
+const Languages = projectFirestore.collection('languages')
 
-export { projectFirestore, Users, Auth, projectAuth, timestamp, projectStorage }
+export { projectFirestore, Users, Languages, Auth, projectAuth, timestamp, projectStorage }
