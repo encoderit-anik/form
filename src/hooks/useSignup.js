@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { projectAuth, projectFirestore, projectStorage } from '../firebase/config'
 import { useAuthContext } from './useAuthContext'
-import { ROLES } from '@/config'
 
 export const useSignup = () => {
 	const [isCancelled, setIsCancelled] = useState(false)
@@ -31,17 +30,15 @@ export const useSignup = () => {
 			await res.user.updateProfile({ displayName, photoURL: imgUrl })
 
 			// create a user document
-			await projectFirestore
-				.collection('users')
-				.doc(res.user.uid)
-				.set({
-					uid: res.user.uid,
-					online: true,
-					email,
-					displayName,
-					photoURL: imgUrl,
-					roles: [ROLES.USER],
-				})
+			await projectFirestore.collection('users').doc(res.user.uid).set({
+				uid: res.user.uid,
+				online: true,
+				email,
+				displayName,
+				photoURL: imgUrl,
+				isAdmin: false,
+				deletedAt: null,
+			})
 
 			// dispatch login action
 			dispatch({ type: 'LOGIN', payload: res.user })

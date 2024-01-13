@@ -6,7 +6,7 @@ export const AuthContext = createContext()
 
 export const AuthContextProvider = ({ children }) => {
 	const [user, setUser] = useLocalStorage('user')
-	useOnAuthStateChanged(user, (v) => {
+	useOnAuthStateChanged((v) => {
 		setUser(v)
 	})
 	return (

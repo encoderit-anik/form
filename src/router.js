@@ -45,6 +45,24 @@ export default createBrowserRouter([
 				path: 'contactus',
 				lazy: () => import('@/pages/(app)/contactus/ContactUs'),
 			},
+			{
+				path: 'admin',
+				lazy: () => import('@/pages/(app)/admin/layout'),
+				children: [
+					{
+						index: true,
+						lazy: () => import('@/pages/(app)/admin'),
+					},
+					{
+						path: 'users',
+						lazy: () => import('@/pages/(app)/admin/users'),
+					},
+					{
+						path: 'languages',
+						lazy: () => import('@/pages/(app)/admin/languages'),
+					},
+				],
+			},
 		],
 	},
 	{

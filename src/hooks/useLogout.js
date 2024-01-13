@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { projectAuth, projectFirestore } from '../firebase/config'
+import { Users, projectAuth, projectFirestore } from '../firebase/config'
 import { useAuthContext } from './useAuthContext'
 
 export const useLogout = () => {
@@ -16,7 +16,10 @@ export const useLogout = () => {
 			// we must do that before we make the use log out from firebase to get the id
 			// update online status
 			const { uid } = user
-			await projectFirestore.collection('users').doc(uid).update({ online: false })
+			await Users.doc(uid).update({
+				online: false,
+				updatedAt: Date.now(),
+			})
 
 			// sign the user out
 			await projectAuth.signOut()

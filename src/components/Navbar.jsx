@@ -41,7 +41,7 @@ export default function Navbar() {
 						</li>
 					</>
 				)}
-				{user && user.uid && (
+				{user && (
 					<>
 						<li>
 							<Link to="#" onClick={openMessageModal}>
@@ -68,9 +68,7 @@ export default function Navbar() {
 					</>
 				)}
 			</ul>
-			{user && user.uid && (
-				<MessageModal isOpen={isMessageModalOpen} onClose={closeMessageModal} />
-			)}
+			{user && <MessageModal isOpen={isMessageModalOpen} onClose={closeMessageModal} />}
 		</div>
 	)
 }

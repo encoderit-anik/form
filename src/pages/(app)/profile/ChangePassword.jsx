@@ -20,7 +20,7 @@ export const Component = () => {
 			}
 		}
 		try {
-			await user.updatePassword(newPassword)
+			await user.ref.updatePassword(newPassword)
 			navigate('/profile')
 		} catch (error) {
 			setErrorMessage(errorMessage.message)

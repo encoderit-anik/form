@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './UpdateProfile.css'
 import { useAuthContext } from '@/hooks/useAuthContext'
 import { useCollection } from '@/hooks/useCollection'
-import { projectFirestore } from '@/firebase/config'
+import { Users, projectFirestore } from '@/firebase/config'
 import { useNavigate } from 'react-router-dom'
 export const Component = () => {
 	const [newName, setNewName] = useState('')
@@ -24,11 +24,13 @@ export const Component = () => {
 			await updateDisplayName(user.uid, newName)
 
 			// Update displayName in the 'users' collection
-			const userRef = projectFirestore.collection('users').doc(user.uid)
-			await userRef.update({ displayName: newName })
+			await Users.doc(user.uid).update({
+				displayName: newName,
+				updatedAt: Date.now(),
+			})
 
 			console.log('Updating profile in authentication...')
-			await user.updateProfile({
+			await user.ref.updateProfile({
 				displayName: newName || user.displayName,
 			})
 			setErrorMessage(null)
@@ -38,6 +40,7 @@ export const Component = () => {
 				window.location.reload()
 			}, 300)
 		} catch (error) {
+			console.log(error)
 			setErrorMessage('An error occurred while updating the name')
 		}
 	}

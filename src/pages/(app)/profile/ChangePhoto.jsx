@@ -1,7 +1,7 @@
 import './UpdateProfile.css'
 import React, { useState } from 'react'
 import { useAuthContext } from '@/hooks/useAuthContext'
-import { projectStorage } from '@/firebase/config'
+import { Users, projectStorage } from '@/firebase/config'
 import { useNavigate } from 'react-router-dom'
 import { projectFirestore } from '@/firebase/config'
 
@@ -49,13 +49,14 @@ export const Component = () => {
 			uploadTask.on('state_changed', null, null, async () => {
 				const downloadURL = await storageRef.getDownloadURL()
 
-				await user.updateProfile({
+				await user.ref.updateProfile({
 					photoURL: downloadURL,
 				})
 
 				// Update users photo URL in the users collection
-				await projectFirestore.collection('users').doc(user.uid).update({
+				await Users.doc(user.uid).update({
 					photoURL: downloadURL,
+					updatedAt: Date.now(),
 				})
 
 				// Update users photo URL in questions collections comment arrays

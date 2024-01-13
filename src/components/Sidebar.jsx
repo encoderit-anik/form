@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react'
 import { NavLink } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 import './Sidebar.css'
@@ -49,6 +50,30 @@ export default function Sidebar() {
 								<span>Chat</span>
 							</NavLink>
 						</li>
+						{user.isAdmin && (
+							<>
+								<li>
+									<NavLink to="/admin" className="flex items-center">
+										<Icon className="text-3xl" icon="clarity:administrator-solid" />
+										<span className="ml-2.5">Admin</span>
+									</NavLink>
+								</li>
+								<ul className="pl-8">
+									<li>
+										<NavLink to="/admin/users" className="flex items-center">
+											<Icon className="text-3xl" icon="mdi:account-group" />
+											<span className="ml-2.5">Users</span>
+										</NavLink>
+									</li>
+									<li>
+										<NavLink to="/admin/languages" className="flex items-center">
+											<Icon className="text-3xl" icon="mdi:code" />
+											<span className="ml-2.5">Languages</span>
+										</NavLink>
+									</li>
+								</ul>
+							</>
+						)}
 					</ul>
 				</nav>
 			</div>

@@ -1,7 +1,7 @@
 import { useAuthContext } from '@/hooks/useAuthContext'
 import './UpdateProfile.css'
 import React, { useState } from 'react'
-import { projectAuth } from '@/firebase/config'
+import { Users, projectAuth } from '@/firebase/config'
 import { useNavigate } from 'react-router-dom'
 
 export const Component = () => {
@@ -38,7 +38,11 @@ export const Component = () => {
 			try {
 				if (newEmail !== '' && newEmail !== user.email) {
 					console.log('Updating email in authentication...')
-					await user.updateEmail(newEmail)
+					await Users.doc(user.uid).update({
+						email: newEmail,
+						updatedAt: Date.now(),
+					})
+					await user.ref.updateEmail(newEmail)
 					console.log('updated!')
 					navigate('/profile')
 				}

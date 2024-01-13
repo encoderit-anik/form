@@ -1,11 +1,12 @@
 // styles
 import './Avatar.css'
 import React from 'react'
+import { clsx } from 'clsx'
 
-export default function Avatar({ src }) {
+export default function Avatar({ src, className }) {
 	return (
-		<div className="avatar">
-			<img src={src} alt="user avatar" />
+		<div className={clsx(className, 'avatar')}>
+			<img src={src} alt="user avatar" className="object-center object-cover" />
 		</div>
 	)
 }
