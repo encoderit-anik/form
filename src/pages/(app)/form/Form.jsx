@@ -1,35 +1,24 @@
-import { useCollection } from '@/hooks/useCollection'
-import './Form.css'
-import React from 'react'
-import QuestionsList from '@/components/QuestionsList'
+import React, { useMemo } from 'react'
 import FormFilter from './FormFilter'
+import QuestionsList from '@/components/QuestionsList'
+
 import { useState } from 'react'
+import { useCollection } from '@/hooks/useCollection'
+
+import './Form.css'
 
 export const Component = () => {
 	const { documents, error } = useCollection('questions')
-
 	const [currentFilter, setCurrentFilter] = useState('all')
+	const changeFilter = (v) => setCurrentFilter(v)
 
-	const changeFilter = (newFilter) => {
-		setCurrentFilter(newFilter)
-	}
-
-	const questions = documents
-		? documents.filter((document) => {
-				switch (currentFilter) {
-					case 'all':
-						return true
-					case 'Java':
-					case 'C#':
-					case 'Python':
-					case 'C++':
-						return document.category === currentFilter
-
-					default:
-						return true
-				}
-			})
-		: null
+	const questions = useMemo(() => {
+		if (!documents) return
+		if (currentFilter === 'all') return documents
+		return documents.filter((doc) => {
+			return doc.category === currentFilter
+		})
+	}, [documents, currentFilter])
 
 	return (
 		<div>

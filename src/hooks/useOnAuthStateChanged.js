@@ -9,7 +9,8 @@ export const useOnAuthStateChanged = (callback) => {
 				.get()
 				.then((snapshot) => {
 					if (!snapshot.exists) {
-						return Auth.signOut()
+						return
+						// return Auth.signOut()
 					}
 
 					const data = snapshot.data()

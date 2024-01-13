@@ -4,16 +4,12 @@ import Select from 'react-select'
 import { useAuthContext } from '@/hooks/useAuthContext'
 import { useFirestore } from '@/hooks/useFirestore'
 import { useNavigate } from 'react-router-dom'
-
-const categories = [
-	{ value: 'Java', label: 'Java' },
-	{ value: 'Python', label: 'Python' },
-	{ value: 'C#', label: 'C#' },
-	{ value: 'C++', label: 'C++' },
-]
+import { useCollection2 } from '@/hooks/useCollection2'
 
 export const Component = () => {
 	const navigate = useNavigate()
+
+	const { data: languages } = useCollection2('languages')
 	const { addDocument, response } = useFirestore('questions')
 	const { user } = useAuthContext()
 
@@ -62,7 +58,11 @@ export const Component = () => {
 				</label>
 				<label>
 					<span>Programming Languages : </span>
-					<Select onChange={(option) => setCategory(option)} options={categories} />
+					<Select
+						onChange={(option) => setCategory(option)}
+						options={languages}
+						getOptionLabel={(v) => v.name}
+					/>
 				</label>
 
 				<button className="btn">Add Question</button>

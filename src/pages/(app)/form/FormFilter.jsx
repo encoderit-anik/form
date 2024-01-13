@@ -1,26 +1,25 @@
-import React from 'react'
-
-const filterList = ['all', 'Java', 'C#', 'C++', 'Python']
+import { useCollection2 } from '@/hooks/useCollection2'
+import clsx from 'clsx'
 
 export default function FormFilter({ currentFilter, changeFilter }) {
-	const handleClick = (newFilter) => {
-		changeFilter(newFilter)
-	}
-	console.log(currentFilter)
-
+	const { data: languages } = useCollection2('languages')
 	return (
 		<div className="question-filter">
 			<nav>
 				<p>Filter by: </p>
-				{filterList.map((f) => (
-					<button
-						key={f}
-						onClick={() => handleClick(f)}
-						className={currentFilter === f ? 'active' : ''}
-					>
-						{f}
-					</button>
-				))}
+				<div className="flex">
+					{[{ name: 'All', value: 'all' }, ...languages].map((language, index) => (
+						<button
+							key={index}
+							onClick={() => changeFilter(language.value)}
+							className={clsx('px-2', {
+								active: currentFilter === language.value,
+							})}
+						>
+							{language.name}
+						</button>
+					))}
+				</div>
 			</nav>
 		</div>
 	)
