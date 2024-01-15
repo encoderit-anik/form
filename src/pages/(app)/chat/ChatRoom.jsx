@@ -27,50 +27,51 @@ const ChatRoom = () => {
 		setMessage('')
 	}
 
-	useEffect(() => {
-		console.log('Response:', response)
-		console.log('Error:', error)
+	// useEffect(() => {
+	// 	console.log('Response:', response)
+	// 	console.log('Error:', error)
 
-		const chatContainer = document.getElementById('chat-container')
-		chatContainer.scrollTop = chatContainer.scrollHeight
+	// 	const chatContainer = document.getElementById('chat-container')
+	// 	chatContainer.scrollTop = chatContainer.scrollHeight
 
-		if (response.document) {
-			console.log('Documents:', response.document)
-		} else {
-			console.log('No documents')
-		}
-	}, [response, error])
+	// 	if (response.document) {
+	// 		console.log('Documents:', response.document)
+	// 	} else {
+	// 		console.log('No documents')
+	// 	}
+	// }, [response, error])
 
 	return (
-		<div className="chat-room">
-			<div id="chat-container" className="chat-container">
-				{error && <p>Error: {error}</p>}
+		<div>{/*  */}</div>
+		// <div className="chat-room">
+		// 	<div id="chat-container" className="chat-container">
+		// 		{error && <p>Error: {error}</p>}
 
-				{response.document && response.document.length > 0 ? (
-					response.document.map((msg) => (
-						<div
-							key={msg.id}
-							className={`message ${msg.senderId === user.uid ? 'sent' : 'received'}`}
-						>
-							<p>{msg.senderName}:</p>
-							<p>{msg.text}</p>
-						</div>
-					))
-				) : (
-					<p>No messages yet.</p>
-				)}
-			</div>
+		// 		{response.document && response.document.length > 0 ? (
+		// 			response.document.map((msg) => (
+		// 				<div
+		// 					key={msg.id}
+		// 					className={`message ${msg.senderId === user.uid ? 'sent' : 'received'}`}
+		// 				>
+		// 					<p>{msg.senderName}:</p>
+		// 					<p>{msg.text}</p>
+		// 				</div>
+		// 			))
+		// 		) : (
+		// 			<p>No messages yet.</p>
+		// 		)}
+		// 	</div>
 
-			<form onSubmit={handleSendMessage} className="message-form">
-				<input
-					type="text"
-					value={message}
-					onChange={(e) => setMessage(e.target.value)}
-					placeholder="Type your message..."
-				/>
-				<button type="submit">Send</button>
-			</form>
-		</div>
+		// 	<form onSubmit={handleSendMessage} className="message-form">
+		// 		<input
+		// 			type="text"
+		// 			value={message}
+		// 			onChange={(e) => setMessage(e.target.value)}
+		// 			placeholder="Type your message..."
+		// 		/>
+		// 		<button type="submit">Send</button>
+		// 	</form>
+		// </div>
 	)
 }
 

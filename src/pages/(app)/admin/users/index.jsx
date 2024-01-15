@@ -1,16 +1,14 @@
 import { clsx } from 'clsx'
 import { Users } from '@/firebase/config'
+import { useUsersContext } from '@/context/UsersContext'
 import { useCallback, useState } from 'react'
-import { useCollection2 } from '@/hooks/useCollection2'
 
 import Avatar from '@/components/Avatar'
 import IconButton from '@/components/base/IconButton'
 import Table from '@/components/base/Table'
 
 export const Component = () => {
-	const { data: users } = useCollection2('users', {
-		where: ['deletedAt', '==', null],
-	})
+	const { users } = useUsersContext()
 
 	const onDeleteUser = useCallback((v) => {
 		if (confirm(`Are you sure delete this user?`)) {

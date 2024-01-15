@@ -25,7 +25,7 @@ export default function Navbar() {
 	}
 
 	return (
-		<div className="navbar">
+		<div className="navbar flex-none">
 			<ul>
 				<li className="logo">
 					<img src={icons8java} alt="form logo" />

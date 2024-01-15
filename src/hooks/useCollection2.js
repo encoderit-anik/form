@@ -15,6 +15,9 @@ export const useCollection2 = (name, options) => {
 		if (options?.where) {
 			ref = ref.where(...options?.where)
 		}
+		if (options?.orderBy) {
+			ref = ref.orderBy(...options?.orderBy)
+		}
 		ref.get()
 			.then((res) => res.docs.map(toItem))
 			.then((res) => setData(res))
