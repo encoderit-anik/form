@@ -8,7 +8,7 @@ import { useCollection } from '@/hooks/useCollection'
 import './Form.css'
 
 export const Component = () => {
-	const { documents, error } = useCollection('questions')
+	const { documents, error } = useCollection('questions', null, ['createdAt', 'desc'])
 	const [currentFilter, setCurrentFilter] = useState('all')
 	const changeFilter = (v) => setCurrentFilter(v)
 

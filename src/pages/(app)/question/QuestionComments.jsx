@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { timestamp } from '@/firebase/config'
 import { useAuthContext } from '@/hooks/useAuthContext'
 import { useFirestore } from '@/hooks/useFirestore'
 import Avatar from '@/components/Avatar'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import IconButton from '@/components/base/IconButton'
 
 export default function QuestionComments({ question }) {
 	const { updateDocument, response, addNotification } = useFirestore('questions')
@@ -87,6 +88,7 @@ export default function QuestionComments({ question }) {
 			await addNotification(question.createdBy.id, 'dislike', question.id, commentId)
 		}
 	}
+
 	const handleSumbit = async (e) => {
 		e.preventDefault()
 		const commentToAdd = {
@@ -106,13 +108,33 @@ export default function QuestionComments({ question }) {
 		}
 	}
 
+	const onDeleteComment = useCallback(
+		async (index) => {
+			if (confirm(`Are you sure delete this comment?`)) {
+				question.doc.ref.update({
+					comments: question.comments.filter((_, i) => {
+						return i !== index
+					}),
+				})
+			}
+		},
+		[question]
+	)
+
 	return (
 		<div className="question-comments">
 			<h4>Comments</h4>
 			<ul>
 				{question.comments.length > 0 &&
-					question.comments.map((comment) => (
-						<li key={comment.id}>
+					question.comments.map((comment, index) => (
+						<li key={index} className="relative group">
+							{user.isAdmin && (
+								<IconButton
+									icon="bx:trash"
+									className="transition-transform duration-300 transform scale-0 group-hover:scale-100 absolute right-2 top-2"
+									onClick={() => onDeleteComment(index)}
+								/>
+							)}
 							<div className="comment-author">
 								<Avatar src={comment.photoURL} />
 								<p>{comment.displayName}</p>
