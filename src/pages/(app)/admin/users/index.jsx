@@ -1,5 +1,4 @@
 import { clsx } from 'clsx'
-import { Users } from '@/firebase/config'
 import { useUsersContext } from '@/context/UsersContext'
 import { useCallback, useState } from 'react'
 
@@ -12,7 +11,7 @@ export const Component = () => {
 
 	const onDeleteUser = useCallback((v) => {
 		if (confirm(`Are you sure delete this user?`)) {
-			Users.doc(v.uid).update({
+			v.doc.ref.update({
 				updatedAt: Date.now(),
 				deletedAt: Date.now(),
 			})
@@ -21,7 +20,7 @@ export const Component = () => {
 
 	const onBlockUnblockUser = useCallback((v) => {
 		if (confirm(`Are you sure to ${v.isBlocked ? 'unblock' : 'block'} this user?`)) {
-			Users.doc(v.uid).update({
+			v.doc.ref.update({
 				isBlocked: !v.isBlocked,
 				updatedAt: Date.now(),
 			})

@@ -1,5 +1,5 @@
 // Chat.js
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react'
 import ChatRoom from './ChatRoom'
 import clsx from 'clsx'
 import { useCollection2 } from '@/hooks/useCollection2'
@@ -44,12 +44,12 @@ export const Component = () => {
 	}, [data, users])
 
 	return (
-		<div className="absolute inset-x-0 bottom-0 top-[100px] overflow-auto flex flex-col">
+		<div className="absolute inset-x-0 bottom-0 top-[100px] flex flex-col">
 			{/* <h2 className="flex-none">Public Chat</h2> */}
 			{/* <ChatRoom /> */}
-			<div className="flex-1 flex flex-col-reverse max-w-2xl w-full mx-auto">
+			<div className="flex-1 flex flex-col-reverse overflow-auto pb-[70px]">
 				{messages.map((message, index) => (
-					<div key={index} className={clsx('mb-2 flex flex-col', {})}>
+					<div key={index} className={clsx('mb-2 max-w-2xl w-full mx-auto flex flex-col', {})}>
 						{!message.isMine && messages[index + 1]?.sender?.uid !== message.senderId && (
 							<div className="text-xs flex items-center space-x-1 mb-1">
 								<Avatar src={message.sender?.photoURL} className="!w-4 !h-4" />
@@ -81,7 +81,7 @@ export const Component = () => {
 					</div>
 				))}
 			</div>
-			<div className="sticky bottom-0 py-3 bg-white bg-opacity-10 backdrop-blur">
+			<div className="absolute bottom-0 inset-x-0 py-3 bg-white bg-opacity-10 backdrop-blur">
 				<div className="flex items-center space-x-2 max-w-lg mx-auto">
 					<input
 						type="text"

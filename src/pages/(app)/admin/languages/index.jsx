@@ -18,11 +18,15 @@ export const Component = () => {
 		}
 	}, [])
 
-	const [isForm, setIsForm] = useState(false)
-	const [form, setForm] = useState({
-		name: '',
-		icon: '',
+	const newForm = (v) => ({
+		ref: v,
+		name: v?.name || '',
+		icon: v?.icon || '',
+		page: v?.page || '',
 	})
+
+	const [isForm, setIsForm] = useState(false)
+	const [form, setForm] = useState(newForm())
 
 	const onChangeForm = useCallback(
 		(name) => (e) => {
@@ -36,19 +40,40 @@ export const Component = () => {
 
 	const onResetForm = useCallback(() => {
 		setIsForm(false)
-		setForm({ name: '', icon: '' })
+		setForm(newForm())
 	}, [])
+
+	const onInitAdd = useCallback(() => {
+		setForm(newForm())
+		setIsForm(true)
+	}, [])
+
+	const onInitUpdate = useCallback(
+		(language) => () => {
+			setForm(newForm(language))
+			setIsForm(true)
+		},
+		[]
+	)
 
 	const onSubmitForm = useCallback(
 		async (e) => {
 			e.preventDefault()
-			await Languages.add({
+
+			const data = {
 				name: form.name,
 				icon: form.icon,
+				page: form.page,
 				value: form.name.toLowerCase().split(' ').join('_'),
 				updatedAt: Date.now(),
-				createdAt: Date.now(),
-			})
+			}
+
+			if (!form.ref) {
+				data.createdAt = Date.now()
+			}
+
+			await (form.ref ? form.ref.doc.ref.update(data) : Languages.add(data))
+
 			onResetForm()
 		},
 		[form]
@@ -59,7 +84,7 @@ export const Component = () => {
 			<div className="flex justify-between items-center">
 				<h1 className="text-xl font-bold">Languages</h1>
 				{!isForm && (
-					<button className="btn" onClick={() => setIsForm(true)}>
+					<button className="btn" onClick={onInitAdd}>
 						Add Language
 					</button>
 				)}
@@ -96,9 +121,13 @@ export const Component = () => {
 								</div>
 							</label>
 						</div>
+						<label>
+							<span>Page link : </span>
+							<input type="text" value={form.page} onChange={onChangeForm('page')} />
+						</label>
 						<div className="flex space-x-4">
 							<button type="submit" className="btn bg-[var(--primary-color)] text-white">
-								Save
+								{form.ref ? 'Update' : 'Save'}
 							</button>
 							<button className="btn" onClick={onResetForm}>
 								Cancel
@@ -110,12 +139,24 @@ export const Component = () => {
 						{languages.map((language, index) => (
 							<div
 								key={index}
-								className="p-4 border border-neutral-200 rounded-lg shadow-lg group"
+								className="p-4 border border-neutral-200 rounded-lg shadow-lg group relative"
 							>
 								<Icon icon={language.icon} className="text-5xl" />
-								<div className="flex items-center justify-between">
-									<div>{language.name}</div>
-
+								<div className="mt-2">{language.name}</div>
+								<div className="flex space-x-1 absolute right-1 bottom-1">
+									{language.page && (
+										<IconButton
+											as="a"
+											href={language.page}
+											icon="bx:info-circle"
+											className="transition-transform duration-300 delay-200 transform scale-0 group-hover:scale-100"
+										/>
+									)}
+									<IconButton
+										icon="bx:pencil"
+										className="transition-transform duration-300 delay-100 transform scale-0 group-hover:scale-100"
+										onClick={onInitUpdate(language)}
+									/>
 									<IconButton
 										icon="bx:trash"
 										className="transition-transform duration-300 transform scale-0 group-hover:scale-100"

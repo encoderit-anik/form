@@ -21,15 +21,12 @@ export const useCollection2 = (name, options) => {
 		ref.get()
 			.then((res) => res.docs.map(toItem))
 			.then((res) => setData(res))
-
-		return projectFirestore
-			.collection(name)
+		return ref
 			.orderBy('updatedAt', 'desc')
 			.limit(1)
 			.onSnapshot((snapshot) => {
 				if (!snapshot.size) return
 				const newItem = toItem(snapshot.docs[0])
-
 				setData((data) => {
 					const index = data.findIndex((item) => {
 						return item.uid === newItem.uid
