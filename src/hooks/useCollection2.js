@@ -1,6 +1,13 @@
 import { projectFirestore } from '@/firebase/config'
 import { useCallback, useEffect, useState } from 'react'
 
+const buildQuery = (name, options) => {
+	let ref = projectFirestore.collection(name)
+	if (options?.where) ref = ref.where(...options?.where)
+	if (options?.orderBy) ref = ref.orderBy(...options?.orderBy)
+	return ref
+}
+
 export const useCollection2 = (name, options) => {
 	const [data, setData] = useState([])
 	const toItem = useCallback((v) => {
@@ -11,18 +18,13 @@ export const useCollection2 = (name, options) => {
 		}
 	}, [])
 	useEffect(() => {
-		let ref = projectFirestore.collection(name)
-		if (options?.where) {
-			ref = ref.where(...options?.where)
-		}
-		if (options?.orderBy) {
-			ref = ref.orderBy(...options?.orderBy)
-		}
-		ref.get()
+		//
+		buildQuery(name, options)
+			.get()
 			.then((res) => res.docs.map(toItem))
 			.then((res) => setData(res))
-		return ref
-			.orderBy('updatedAt', 'desc')
+		//
+		return buildQuery(name, options)
 			.limit(1)
 			.onSnapshot((snapshot) => {
 				if (!snapshot.size) return

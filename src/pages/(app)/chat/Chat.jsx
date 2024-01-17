@@ -1,13 +1,13 @@
 // Chat.js
-import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react'
-import ChatRoom from './ChatRoom'
-import clsx from 'clsx'
-import { useCollection2 } from '@/hooks/useCollection2'
-import { useUsersContext } from '@/context/UsersContext'
-import { useAuthContext } from '@/hooks/useAuthContext'
+import { useCallback, useMemo, useState } from 'react'
 import { Messages } from '@/firebase/config'
-import Avatar from '@/components/Avatar'
+import { useCollection2 } from '@/hooks/useCollection2'
+import { useAuthContext } from '@/hooks/useAuthContext'
+import { useUsersContext } from '@/context/UsersContext'
 import { formatDistanceToNow } from 'date-fns'
+
+import clsx from 'clsx'
+import Avatar from '@/components/Avatar'
 
 export const Component = () => {
 	const { user } = useAuthContext()
@@ -45,13 +45,11 @@ export const Component = () => {
 
 	return (
 		<div className="absolute inset-x-0 bottom-0 top-[100px] flex flex-col">
-			{/* <h2 className="flex-none">Public Chat</h2> */}
-			{/* <ChatRoom /> */}
 			<div className="flex-1 flex flex-col-reverse overflow-auto pb-[70px]">
 				{messages.map((message, index) => (
 					<div key={index} className={clsx('mb-2 max-w-2xl w-full mx-auto flex flex-col', {})}>
 						{!message.isMine && messages[index + 1]?.sender?.uid !== message.senderId && (
-							<div className="text-xs flex items-center space-x-1 mb-1">
+							<div className="text-xs flex items-center space-x-1 mb-1 mt-4">
 								<Avatar src={message.sender?.photoURL} className="!w-4 !h-4" />
 								<div>{message.sender?.displayName}</div>
 							</div>
@@ -71,8 +69,12 @@ export const Component = () => {
 								{message.text}
 							</div>
 						</div>
-						{!message.isMine && messages[index - 1]?.sender?.uid !== message.senderId && (
-							<div className="text-[10px] mt-1 text-neutral-500">
+						{messages[index - 1]?.sender?.uid !== message.senderId && (
+							<div
+								className={clsx('text-[10px] mt-1 text-neutral-500', {
+									'text-right': message.isMine,
+								})}
+							>
 								{formatDistanceToNow(new Date(message.createdAt), {
 									addSuffix: true,
 								})}
