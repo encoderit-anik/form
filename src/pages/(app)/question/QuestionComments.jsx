@@ -1,107 +1,63 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { timestamp } from '@/firebase/config'
-import { useAuthContext } from '@/hooks/useAuthContext'
 import { useFirestore } from '@/hooks/useFirestore'
+import { useAuthContext } from '@/hooks/useAuthContext'
+
 import Avatar from '@/components/Avatar'
-import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import IconButton from '@/components/base/IconButton'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 export default function QuestionComments({ question }) {
-	const { updateDocument, response, addNotification } = useFirestore('questions')
 	const [newComment, setNewComment] = useState('')
+
 	const { user } = useAuthContext()
+	const { updateDocument, response, addNotification } = useFirestore('questions')
 
-	// Initialize likes and dislikes based on question.comments
-	const [likes, setLikes] = useState({})
-	const [dislikes, setDislikes] = useState({})
-	useEffect(() => {
-		const initialLikes = {}
-		const initialDislikes = {}
-		question.comments.forEach((comment) => {
-			initialLikes[comment.id] = false
-			initialDislikes[comment.id] = false
-		})
-		setLikes(initialLikes)
-		setDislikes(initialDislikes)
-	}, [question.comments])
-
-	const handleLike = async (commentId, commentAuthorId) => {
-		if (!likes[commentId]) {
-			const updatedComments = question.comments.map((comment) => {
-				if (comment.id === commentId) {
-					return {
-						...comment,
-						likes: comment.likes + 1,
-						dislikes: dislikes[commentId] ? comment.dislikes - 1 : comment.dislikes,
-					}
-				}
-				return comment
-			})
-
-			await updateDocument(question.id, {
-				comments: updatedComments,
-			})
-
-			setLikes((prevLikes) => ({
-				...prevLikes,
-				[commentId]: true,
-			}))
-
-			setDislikes((prevDislikes) => ({
-				...prevDislikes,
-				[commentId]: false,
-			}))
-
-			// Add notification to the comment author
-			await addNotification(question.createdBy.id, 'like', question.id, commentId)
-		}
-	}
-
-	const handleDislike = async (commentId, commentAuthorId) => {
-		if (!dislikes[commentId]) {
-			const updatedComments = question.comments.map((comment) => {
-				if (comment.id === commentId) {
-					return {
-						...comment,
-						dislikes: comment.dislikes + 1,
-						likes: likes[commentId] ? comment.likes - 1 : comment.likes,
-					}
-				}
-				return comment
-			})
-
-			await updateDocument(question.id, {
-				comments: updatedComments,
-			})
-
-			setDislikes((prevDislikes) => ({
-				...prevDislikes,
-				[commentId]: true,
-			}))
-
-			setLikes((prevLikes) => ({
-				...prevLikes,
-				[commentId]: false,
-			}))
-
-			// Add notification to the comment author
-			await addNotification(question.createdBy.id, 'dislike', question.id, commentId)
-		}
-	}
-
-	const handleSumbit = async (e) => {
-		e.preventDefault()
-		const commentToAdd = {
-			displayName: user.displayName,
-			photoURL: user.photoURL,
-			content: newComment,
-			createdAt: timestamp.fromDate(new Date()),
-			id: user.uid,
-			likes: 0, // Initialize likes
-			dislikes: 0, // Initialize dislikes
-		}
+	const handleLike = async (comment, index) => {
+		if (comment.likedBy.includes(user.uid)) return
 		await updateDocument(question.id, {
-			comments: [...question.comments, commentToAdd],
+			comments: question.comments.map((item, itemIndex) => {
+				if (index !== itemIndex) return item
+				return {
+					...item,
+					likedBy: [...new Set([...item.likedBy, user.uid])],
+					dislikedBy: item.dislikedBy.filter((uid) => uid !== user.uid),
+				}
+			}),
+		})
+		await addNotification(question.createdBy.id, 'like', question.id, comment.id)
+	}
+
+	const handleDislike = async (comment, index) => {
+		if (comment.dislikedBy.includes(user.uid)) return
+		await updateDocument(question.id, {
+			comments: question.comments.map((item, itemIndex) => {
+				if (index !== itemIndex) return item
+				return {
+					...item,
+					likedBy: item.likedBy.filter((uid) => uid !== user.uid),
+					dislikedBy: [...new Set([...item.dislikedBy, user.uid])],
+				}
+			}),
+		})
+		await addNotification(question.createdBy.id, 'dislike', question.id, comment.id)
+	}
+
+	const handleSubmit = async (e) => {
+		e.preventDefault()
+		await updateDocument(question.id, {
+			comments: [
+				...question.comments,
+				{
+					displayName: user.displayName,
+					photoURL: user.photoURL,
+					content: newComment,
+					createdAt: timestamp.fromDate(new Date()),
+					id: user.uid,
+					likedBy: [], // Initialize likes
+					dislikedBy: [], // Initialize dislikes
+				},
+			],
 		})
 		if (!response.error) {
 			setNewComment('')
@@ -149,23 +105,23 @@ export default function QuestionComments({ question }) {
 							</div>
 							<div className="comment-actions">
 								<button
-									onClick={() => handleLike(comment.id)}
-									className={likes[comment.id] ? 'liked' : ''}
+									onClick={() => handleLike(comment, index)}
+									className={comment.likedBy.includes(user.uid) ? 'liked' : ''}
 								>
-									Like ({comment.likes})
+									Like ({comment.likedBy.length})
 								</button>
 								<button
-									onClick={() => handleDislike(comment.id)}
-									className={dislikes[comment.id] ? 'disliked' : ''}
+									onClick={() => handleDislike(comment, index)}
+									className={comment.dislikedBy.includes(user.uid) ? 'disliked' : ''}
 								>
-									Dislike ({comment.dislikes})
+									Dislike ({comment.dislikedBy.length})
 								</button>
 							</div>
 						</li>
 					))}
 			</ul>
 
-			<form className="add-comment" onSubmit={handleSumbit}>
+			<form className="add-comment" onSubmit={handleSubmit}>
 				<label>
 					<span>Add new comment :</span>
 					<textarea

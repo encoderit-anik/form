@@ -104,47 +104,47 @@ export const useFirestore = (collection) => {
 			dispatchIfNotCancelled({ type: 'ERROR', payload: err.message })
 		}
 	}
-	const handleLikeComment = async (commentId) => {
-		try {
-			const commentRef = projectFirestore.collection('comments').doc(commentId)
-			const snapshot = await commentRef.get()
-			const existingLikes = snapshot.data().likes || new Set()
+	// const handleLikeComment = async (commentId) => {
+	// 	try {
+	// 		const commentRef = projectFirestore.collection('comments').doc(commentId)
+	// 		const snapshot = await commentRef.get()
+	// 		const existingLikes = snapshot.data().likes || new Set()
 
-			if (!existingLikes.has(user.uid)) {
-				await projectFirestore.runTransaction(async (transaction) => {
-					const newLikes = new Set(existingLikes)
-					newLikes.add(user.uid)
-					await transaction.update(commentRef, { likes: newLikes })
-				})
-				// Update UI to reflect the like
-				// ... your UI update logic here ...
-			}
-		} catch (error) {
-			console.error('Error liking comment:', error)
-			// Handle error gracefully
-		}
-	}
+	// 		if (!existingLikes.has(user.uid)) {
+	// 			await projectFirestore.runTransaction(async (transaction) => {
+	// 				const newLikes = new Set(existingLikes)
+	// 				newLikes.add(user.uid)
+	// 				await transaction.update(commentRef, { likes: newLikes })
+	// 			})
+	// 			// Update UI to reflect the like
+	// 			// ... your UI update logic here ...
+	// 		}
+	// 	} catch (error) {
+	// 		console.error('Error liking comment:', error)
+	// 		// Handle error gracefully
+	// 	}
+	// }
 
-	const handleDislikeComment = async (commentId) => {
-		try {
-			const commentRef = projectFirestore.collection('comments').doc(commentId)
-			const snapshot = await commentRef.get()
-			const existingDislikes = snapshot.data().dislikes || new Set()
+	// const handleDislikeComment = async (commentId) => {
+	// 	try {
+	// 		const commentRef = projectFirestore.collection('comments').doc(commentId)
+	// 		const snapshot = await commentRef.get()
+	// 		const existingDislikes = snapshot.data().dislikes || new Set()
 
-			if (!existingDislikes.has(user.uid)) {
-				await projectFirestore.runTransaction(async (transaction) => {
-					const newDislikes = new Set(existingDislikes)
-					newDislikes.add(user.uid)
-					await transaction.update(commentRef, { dislikes: newDislikes })
-				})
-				// Update UI to reflect the dislike
-				// ... your UI update logic here ...
-			}
-		} catch (error) {
-			console.error('Error disliking comment:', error)
-			// Handle error gracefully
-		}
-	}
+	// 		if (!existingDislikes.has(user.uid)) {
+	// 			await projectFirestore.runTransaction(async (transaction) => {
+	// 				const newDislikes = new Set(existingDislikes)
+	// 				newDislikes.add(user.uid)
+	// 				await transaction.update(commentRef, { dislikes: newDislikes })
+	// 			})
+	// 			// Update UI to reflect the dislike
+	// 			// ... your UI update logic here ...
+	// 		}
+	// 	} catch (error) {
+	// 		console.error('Error disliking comment:', error)
+	// 		// Handle error gracefully
+	// 	}
+	// }
 
 	return {
 		addDocument,
@@ -152,7 +152,7 @@ export const useFirestore = (collection) => {
 		response,
 		updateDocument,
 		addNotification,
-		handleLikeComment,
-		handleDislikeComment,
+		// handleLikeComment,
+		// handleDislikeComment,
 	}
 }
