@@ -22,6 +22,10 @@ export default createBrowserRouter([
 				lazy: () => import('@/pages/(app)/chat/Chat'),
 			},
 			{
+				path: 'learn',
+				lazy: () => import('@/pages/(app)/learn'),
+			},
+			{
 				path: 'profile',
 				lazy: () => import('@/pages/(app)/profile/Profile'),
 			},

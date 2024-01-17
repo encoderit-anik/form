@@ -50,6 +50,12 @@ export default function Sidebar() {
 								<span>Chat</span>
 							</NavLink>
 						</li>
+						<li>
+							<NavLink to="/learn" className="flex items-center">
+								<Icon className="text-3xl" icon="mdi:learn-outline" />
+								<span className="ml-2.5">Learn</span>
+							</NavLink>
+						</li>
 						{user.isAdmin && (
 							<>
 								<li>
