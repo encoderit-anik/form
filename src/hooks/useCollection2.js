@@ -18,13 +18,16 @@ export const useCollection2 = (name, options, options2) => {
 			...v.data(),
 		}
 	}, [])
-	useEffect(() => {
-		//
+
+	const refresh = useCallback(() => {
 		buildQuery(name, options)
 			.get()
 			.then((res) => res.docs.map(toItem))
 			.then((res) => setData(res))
-		//
+	}, [])
+
+	useEffect(() => {
+		refresh()
 		return buildQuery(name, options2)
 			.limit(1)
 			.onSnapshot((snapshot) => {
@@ -50,5 +53,5 @@ export const useCollection2 = (name, options, options2) => {
 				})
 			})
 	}, [])
-	return { data, setData }
+	return { data, refresh, setData }
 }

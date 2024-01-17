@@ -1,5 +1,6 @@
 // Chat.js
 import { useCallback, useMemo, useState } from 'react'
+import { Icon } from '@iconify/react'
 import { Messages } from '@/firebase/config'
 import { useCollection2 } from '@/hooks/useCollection2'
 import { useAuthContext } from '@/hooks/useAuthContext'
@@ -11,10 +12,10 @@ import Avatar from '@/components/Avatar'
 
 export const Component = () => {
 	const { user } = useAuthContext()
-	const { data } = useCollection2(
+	const { data, refresh } = useCollection2(
 		'chat',
 		{
-			limit: 50,
+			limit: 10,
 			orderBy: ['createdAt', 'desc'],
 		},
 		{
@@ -37,6 +38,13 @@ export const Component = () => {
 		setText('')
 		await Messages.add(message)
 	}, [text])
+
+	const onDeleteMessage = useCallback(async (message) => {
+		if (confirm(`Are you sure delete this message?`)) {
+			await message.doc.ref.delete()
+			refresh()
+		}
+	}, [])
 
 	const messages = useMemo(() => {
 		return data.map((message) => {
@@ -62,8 +70,8 @@ export const Component = () => {
 							</div>
 						)}
 						<div
-							className={clsx('flex', {
-								'justify-end': message.isMine,
+							className={clsx('flex items-center group', {
+								'flex-row-reverse justify-start': message.isMine,
 							})}
 						>
 							<div
@@ -75,6 +83,17 @@ export const Component = () => {
 							>
 								{message.text}
 							</div>
+							{user.isAdmin && (
+								<Icon
+									role="button"
+									icon="bx:trash"
+									className={clsx(
+										'text-neutral-400 hover:text-red-500 transform duration-300 scale-0 group-hover:scale-100',
+										message.isMine ? 'mr-2' : 'ml-2'
+									)}
+									onClick={() => onDeleteMessage(message)}
+								/>
+							)}
 						</div>
 						{messages[index - 1]?.sender?.uid !== message.senderId && (
 							<div
