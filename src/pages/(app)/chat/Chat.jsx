@@ -11,9 +11,16 @@ import Avatar from '@/components/Avatar'
 
 export const Component = () => {
 	const { user } = useAuthContext()
-	const { data } = useCollection2('chat', {
-		orderBy: ['createdAt', 'desc'],
-	})
+	const { data } = useCollection2(
+		'chat',
+		{
+			limit: 50,
+			orderBy: ['createdAt', 'desc'],
+		},
+		{
+			orderBy: ['createdAt', 'desc'],
+		}
+	)
 	const { users } = useUsersContext()
 
 	const [text, setText] = useState('')

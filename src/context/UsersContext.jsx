@@ -4,9 +4,16 @@ import { useCollection2 } from '@/hooks/useCollection2'
 export const UsersContext = createContext()
 
 export const UsersProvider = ({ children }) => {
-	const { data: users } = useCollection2('users', {
-		where: ['deletedAt', '==', null],
-	})
+	const { data: users } = useCollection2(
+		'users',
+		{
+			where: ['deletedAt', '==', null],
+			orderBy: ['updatedAt', 'desc'],
+		},
+		{
+			orderBy: ['updatedAt', 'desc'],
+		}
+	)
 	return (
 		<UsersContext.Provider
 			value={{

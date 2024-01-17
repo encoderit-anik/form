@@ -5,10 +5,11 @@ const buildQuery = (name, options) => {
 	let ref = projectFirestore.collection(name)
 	if (options?.where) ref = ref.where(...options?.where)
 	if (options?.orderBy) ref = ref.orderBy(...options?.orderBy)
+	if (options?.limit) ref = ref.limit(options.limit)
 	return ref
 }
 
-export const useCollection2 = (name, options) => {
+export const useCollection2 = (name, options, options2) => {
 	const [data, setData] = useState([])
 	const toItem = useCallback((v) => {
 		return {
@@ -24,7 +25,7 @@ export const useCollection2 = (name, options) => {
 			.then((res) => res.docs.map(toItem))
 			.then((res) => setData(res))
 		//
-		return buildQuery(name, options)
+		return buildQuery(name, options2)
 			.limit(1)
 			.onSnapshot((snapshot) => {
 				if (!snapshot.size) return
