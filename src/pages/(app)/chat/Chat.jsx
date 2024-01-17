@@ -15,7 +15,7 @@ export const Component = () => {
 	const { data, refresh } = useCollection2(
 		'chat',
 		{
-			limit: 10,
+			limit: 50,
 			orderBy: ['createdAt', 'desc'],
 		},
 		{
