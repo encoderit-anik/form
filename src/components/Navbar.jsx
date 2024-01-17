@@ -43,7 +43,7 @@ export default function Navbar() {
 				)}
 				{user && (
 					<>
-						<li>
+						<li className="flex items-center">
 							<Link to="#" onClick={openMessageModal}>
 								<img src={messagesIcon} alt="" />
 								{unreadNotificationsCount > 0 && (
